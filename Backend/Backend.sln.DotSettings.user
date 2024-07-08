@@ -1,0 +1,4 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fe19cd7e_002Df9cd_002D4774_002Da1f1_002D21a2c3c16f07/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Banana" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;ProjectFolder&gt;39A416C9-D3F4-4C34-AE78-F0399CD9B354/d:Scrapers&lt;/ProjectFolder&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
