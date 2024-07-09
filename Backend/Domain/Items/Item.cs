@@ -1,5 +1,5 @@
 using Domain.Abstract;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json.Converters;
 
 namespace Domain.Items;
