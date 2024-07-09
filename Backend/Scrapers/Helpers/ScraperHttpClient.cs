@@ -6,10 +6,11 @@ namespace Scrapers.Helpers;
 public static class ScraperHttpClient
 {
     private static HttpClient _client = null;
+    private static DateTimeOffset _lastRefresh = DateTimeOffset.MinValue;
     
     public static HttpClient Get()
     {
-        if (_client != null) return _client;
+        if (_client != null && _lastRefresh > DateTimeOffset.Now.AddMinutes(-2)) return _client;
         var handler = new HttpClientHandler
         {
             AllowAutoRedirect = true,
@@ -25,6 +26,7 @@ public static class ScraperHttpClient
         _client.DefaultRequestHeaders.Add("Sec-Ch-Ua", "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Microsoft Edge\";v=\"126\"");
         _client.DefaultRequestHeaders.Add("Sec-Fetch-Mode", "navigate");
         _client.DefaultRequestHeaders.Add("Sec-Fetch-User", "?1");
+        _lastRefresh = DateTimeOffset.Now;
         return _client;
     }
 }
