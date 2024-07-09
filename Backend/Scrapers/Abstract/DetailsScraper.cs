@@ -1,22 +1,28 @@
 ﻿using Domain;
 using Domain.Items;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 using Models;
 
 namespace Scrapers.Abstract;
 
-public abstract class DetailsScraper
+public abstract class DetailsScraper(ILoggerFactory loggerFactory)
 {
-    public abstract Shop Shop { get; }
+    protected abstract Shop Shop { get; }
     protected abstract Task<string> FetchPage(string url);
     protected abstract string GetTitle(HtmlDocument document);
     protected abstract string GetDescription(HtmlDocument document);
     protected abstract decimal GetPrice(HtmlDocument document);
     protected abstract string GetImage(HtmlDocument document);
     
-    public async Task<ScrapedItem> Scrape(string url)
+    public async Task<ScrapedItem?> Scrape(string url)
     {
         var page = await FetchPage(url);
+        if (string.IsNullOrEmpty(page))
+        {
+            loggerFactory.CreateLogger<DetailsScraper>().LogInformation("No page found on: {Url}", url);
+            return null;
+        }
         var document = new HtmlDocument();
         document.LoadHtml(page);
 

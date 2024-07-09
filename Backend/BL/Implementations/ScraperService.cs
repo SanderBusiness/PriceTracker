@@ -1,35 +1,30 @@
-﻿using BL.Helpers;
-using BL.Interfaces;
+﻿using BL.Interfaces;
 using DAL.EF;
 using Domain.Items;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models;
+using Scrapers.Abstract;
+using Scrapers.Carrefour;
 
 namespace BL.Implementations;
 
-public class ScraperService(ILogger<ScraperService> logger, ApplicationContext db) : IScraperService
+public class ScraperService(ILogger<ScraperService> logger, ApplicationContext db, ILoggerFactory loggerFactory) : IScraperService
 {
+    private readonly List<Scraper> _scrapers = [new CarrefourScraper(loggerFactory)];
+    
     public async Task Discover(string search)
     {
         var start = DateTimeOffset.Now;
         logger.LogInformation("Discovering items for: {Search}", search);
-        var scrapers = ScraperFactory.DiscoveryScrapers();
-        var discoveryTasks = new List<Task<List<DiscoveredItem>>>();
-        scrapers.ForEach(s => discoveryTasks.Add(s.Discover(search)));
-        var discoveryResults = await Task.WhenAll(discoveryTasks);
-        var detailTasks = new List<Task<ScrapedItem?>>();
-        discoveryResults.ToList()
-            .ForEach(discoveredItem 
-                => discoveredItem
-                    .ForEach(item 
-                        => detailTasks.Add(FetchDetails(item))));
-        logger.LogInformation("Discovering {Count} items for: {Search}", detailTasks.Count(), search);
-        var details = await Task.WhenAll(detailTasks);
+        var resultTasks = new List<Task<IEnumerable<ScrapedItem?>>>();
+        _scrapers.ForEach(s => resultTasks.Add(s.Scrape(search, loggerFactory.CreateLogger<Scraper>())));
+        var results = await Task.WhenAll(resultTasks);
+        var resultsCombined = results.SelectMany(i => i).Cast<ScrapedItem>().ToList();
         var upsertTasks = new List<Task>();
-        details.ToList().ForEach(i => upsertTasks.Add(Upsert(i, search)));
+        resultsCombined.ForEach(e => upsertTasks.Add(Upsert(e, search)));
+        logger.LogInformation("Scraped {Count} items in {Seconds}s for search: {Query}", upsertTasks.Count, (DateTimeOffset.Now-start).TotalSeconds, search);
         await Task.WhenAll(upsertTasks);
-        logger.LogInformation("Took {Seconds}s to discover {Count} items for: {Search}", (int) (DateTimeOffset.Now-start).TotalSeconds, upsertTasks.Count, search);
     }
 
     private async Task Upsert(ScrapedItem? item, string searchQuery)
@@ -60,14 +55,5 @@ public class ScraperService(ILogger<ScraperService> logger, ApplicationContext d
                 Price = item.Price,
             });
         await db.SaveChangesAsync();
-    }
-
-    private async Task<ScrapedItem?> FetchDetails(DiscoveredItem item)
-    {
-        var scrapers = ScraperFactory.DetailScrapers();
-        var scraper = scrapers.FirstOrDefault(s => s.Shop == item.Shop);
-        if (scraper == null)
-            return null;
-        return await scraper.Scrape(item.Url);
     }
 }

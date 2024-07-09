@@ -5,12 +5,11 @@ using Scrapers.Helpers;
 
 namespace Scrapers.Carrefour;
 
-public class CarrefourDiscoveryScraper : DiscoveryScraper
+public class CarrefourDiscoveryScraper(HttpClient client) : DiscoveryScraper
 {
     protected override Shop Shop => Shop.Carrefour;
     protected override async Task<string> FetchPage(string search)
     {
-        var client = ScraperHttpClient.Get();
         var response = await client.GetAsync($"https://www.carrefour.be/nl/search?q={search}&page=0");
         return await response.Content.ReadAsStringAsync();
     }
