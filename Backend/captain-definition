@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 2,
+  "dockerfileLines": [
+    "FROM mcr.microsoft.com/dotnet/sdk:8.0", 
+    "RUN echo $(ls)",
+    "COPY . /app",
+    "RUN dotnet publish '/app/API/API.csproj' -c Release -o /app/publish",
+    "ENV ASPNETCORE_URLS=http://+:80",
+    "EXPOSE 80",
+    "ENTRYPOINT [\"dotnet\", \"/app/publish/API.dll\"]"
+  ]
+}
