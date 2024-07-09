@@ -1,9 +1,12 @@
-﻿using Domain.Abstract;
+using Domain.Abstract;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Domain.Items;
 
 public class Item : Entity
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public required Shop Shop { get; set; }
     public required string Title { get; set; }
     public required string Description { get; set; }
