@@ -1,0 +1,43 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Deploy Server
+
+on:
+  push:
+    branches: ['main']
+    paths: [ 'Backend/**' ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Test
+        run: cd ./Backend/Test && dotnet test --verbosity normal
+      - name: Restore API dependencies
+        run: cd ./Backend/API && dotnet restore
+      - name: Build API
+        run: cd ./Backend/API && dotnet build --no-restore
+
+      - uses: a7ul/tar-action@v1.1.0
+        with:
+          command: c
+          cwd: "./Backend"
+          files: |
+            .
+            captain-definition
+          outPath: deploy.tar
+      - name: Deploy App to CapRover
+        uses: caprover/deploy-from-github@v1.0.1
+        with:
+          server: '${{ secrets.CAPROVER_SERVER }}'
+          app: '${{ secrets.APP_NAME }}'
+          token: '${{ secrets.APP_TOKEN }}'
+          
