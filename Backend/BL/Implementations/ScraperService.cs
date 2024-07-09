@@ -24,6 +24,7 @@ public class ScraperService(ILogger<ScraperService> logger, ApplicationContext d
                 => discoveredItem
                     .ForEach(item 
                         => detailTasks.Add(FetchDetails(item))));
+        logger.LogInformation("Discovering {Count} items for: {Search}", detailTasks.Count(), search);
         var details = await Task.WhenAll(detailTasks);
         var upsertTasks = new List<Task>();
         details.ToList().ForEach(i => upsertTasks.Add(Upsert(i, search)));
