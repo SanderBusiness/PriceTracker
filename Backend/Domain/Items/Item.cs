@@ -9,7 +9,6 @@ public class Item : Entity
     [JsonConverter(typeof(StringEnumConverter))]
     public required Shop Shop { get; set; }
     public required string Title { get; set; }
-    public required string Description { get; set; }
     public required string Url { get; set; }
     public required string Image { get; set; }
 

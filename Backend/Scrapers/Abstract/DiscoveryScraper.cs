@@ -12,6 +12,8 @@ public abstract class DiscoveryScraper
     protected abstract IEnumerable<HtmlNode> GetItems(HtmlDocument document);
     protected abstract string GetTitle(HtmlNode node);
     protected abstract string GetUrl(HtmlNode node);
+    protected abstract decimal GetPrice(HtmlNode node);
+    protected abstract string GetImage(HtmlNode node);
     
     /// <param name="search">Filter to find specific items</param>
     /// <returns>Url of possible items</returns>
@@ -27,6 +29,8 @@ public abstract class DiscoveryScraper
             {
                 Title = GetTitle(itemNode),
                 Url = GetUrl(itemNode),
+                Price = GetPrice(itemNode),
+                Image = GetImage(itemNode),
                 Shop = Shop,
             })
             .Where(item => !string.IsNullOrEmpty(item.Title))

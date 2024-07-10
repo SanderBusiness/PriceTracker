@@ -1,10 +1,8 @@
-﻿using Domain;
+﻿using Domain.Items;
 
 namespace Models;
 
-public class DiscoveredItem
+public class DiscoveredItem : Item
 {
-    public Shop Shop { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Url { get; set; } = string.Empty;
+    public decimal Price { get; init; } = -1;
 }
