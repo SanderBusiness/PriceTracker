@@ -18,12 +18,12 @@ public class ScraperService(ILogger<ScraperService> logger, ApplicationContext d
     {
         var start = DateTimeOffset.Now;
         logger.LogInformation("Discovering items for: {Search} (service created on: {Date})", search, _serviceCreatedOn.ToString());
-        var resultTasks = new List<Task<List<DiscoveredItem>>>();
-        _scrapers.ForEach(s => resultTasks.Add(s.Discover(search)));
-        var results = await Task.WhenAll(resultTasks);
-        var resultsCombined = results.SelectMany(e => e).ToList();
+        var discoveryTasks = new List<Task<List<DiscoveredItem>>>();
+        _scrapers.ForEach(s => discoveryTasks.Add(s.Discover(search)));
+        var discoveryResultsSplit = await Task.WhenAll(discoveryTasks);
+        var discoveryResults = discoveryResultsSplit.SelectMany(e => e).ToList();
         var upsertTasks = new List<Task>();
-        resultsCombined.ForEach(e => upsertTasks.Add(Upsert(e, search)));
+        discoveryResults.ForEach(e => upsertTasks.Add(Upsert(e, search)));
         logger.LogInformation("Scraped {Count} items in {Seconds}s for search: {Query}", upsertTasks.Count, (DateTimeOffset.Now-start).TotalSeconds, search);
         await Task.WhenAll(upsertTasks);
     }
