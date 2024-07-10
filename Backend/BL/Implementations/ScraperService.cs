@@ -41,7 +41,6 @@ public class ScraperService(ILogger<ScraperService> logger, ApplicationContext d
                 Image = item.Image,
                 Shop = item.Shop,
                 Url = item.Url,
-                Description = string.Empty,
             };
             db.Items.Add(entity);
         }
