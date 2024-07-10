@@ -11,6 +11,6 @@ public static class Dependencies
         return services
             .AddDbContext<ApplicationContext>()
             .AddScoped<IItemService, ItemService>()
-            .AddScoped<IScraperService, ScraperService>();
+            .AddTransient<IScraperService, ScraperService>();
     }
 }
