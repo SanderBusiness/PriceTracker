@@ -43,7 +43,7 @@ public class CarrefourScraper : DiscoveryScraper
             .Where(e => e.HasClass("value"))
             .Select(e => e.GetAttributeValue("content", "-1"))
             .Where(e => e != "-1")
-            .Select(e => e.Replace(".", ","))
+            //.Select(e => e.Replace(".", ","))
             .Select(decimal.Parse)
             .ToList();
         if (!prices.Any())
