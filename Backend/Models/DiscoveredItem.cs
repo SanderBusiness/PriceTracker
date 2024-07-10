@@ -4,5 +4,5 @@ namespace Models;
 
 public class DiscoveredItem : Item
 {
-    public decimal Price { get; set; } = -1;
+    public decimal Price { get; init; } = -1;
 }
