@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using Domain;
 using HtmlAgilityPack;
-using Microsoft.AspNetCore.Http;
 using Scrapers.Abstract;
 using Scrapers.Helpers;
 
