@@ -19,8 +19,10 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
+      - name: Restore Test dependencies
+        run: cd ./Backend/Test && dotnet restore
       - name: Test
-        run: cd ./Backend/Test && dotnet test --verbosity normal
+        run: cd ./Backend/Test && dotnet test --verbosity normal --no-restore
       - name: Restore API dependencies
         run: cd ./Backend/API && dotnet restore
       - name: Build API
