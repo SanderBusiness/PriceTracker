@@ -11,7 +11,7 @@ namespace BL.Implementations;
 
 public class ScraperService(ILogger<ScraperService> logger, ApplicationContext db, ILoggerFactory loggerFactory) : IScraperService
 {
-    private readonly List<DiscoveryScraper> _scrapers = [new CarrefourScraper()];
+    private readonly List<IDiscoveryScraper> _scrapers = [new CarrefourScraper()];
     private readonly DateTimeOffset _serviceCreatedOn = DateTimeOffset.Now;
     
     public async Task Discover(string search)

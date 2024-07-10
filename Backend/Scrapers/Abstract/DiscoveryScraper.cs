@@ -1,27 +1,23 @@
 ﻿using Domain;
-using Domain.Items;
-using HtmlAgilityPack;
 using Models;
 
 namespace Scrapers.Abstract;
 
-public abstract class DiscoveryScraper
+public abstract class DiscoveryScraper<TP, TD> : IDiscoveryScraper
 {
-    protected abstract Shop Shop { get; }
-    protected abstract Task<string> FetchPage(string search);
-    protected abstract IEnumerable<HtmlNode> GetItems(HtmlDocument document);
-    protected abstract string GetTitle(HtmlNode node);
-    protected abstract string GetUrl(HtmlNode node);
-    protected abstract decimal GetPrice(HtmlNode node);
-    protected abstract string GetImage(HtmlNode node);
-    
+    public abstract Shop Shop { get; }
+    protected abstract Task<TD> FetchPage(string search);
+    protected abstract IEnumerable<TP> GetItems(TD document);
+    protected abstract string GetTitle(TP node);
+    protected abstract string GetUrl(TP node);
+    protected abstract decimal GetPrice(TP node);
+    protected abstract string GetImage(TP node);
+
     /// <param name="search">Filter to find specific items</param>
     /// <returns>Url of possible items</returns>
     public async Task<List<DiscoveredItem>> Discover(string search)
     {
-        var pageContent = await FetchPage(search);
-        var document = new HtmlDocument();
-        document.LoadHtml(pageContent);
+        var document = await FetchPage(search);
 
         var itemNodes = GetItems(document);
 
