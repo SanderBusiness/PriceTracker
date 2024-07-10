@@ -9,9 +9,9 @@ using Scrapers.Carrefour;
 
 namespace BL.Implementations;
 
-public class ScraperService(ILogger<ScraperService> logger, ApplicationContext db, ILoggerFactory loggerFactory) : IScraperService
+public class ScraperService(ILogger<ScraperService> logger, ApplicationContext db, CarrefourScraper carrefourScraper) : IScraperService
 {
-    private readonly List<IDiscoveryScraper> _scrapers = [new CarrefourScraper()];
+    private readonly List<IDiscoveryScraper> _scrapers = [carrefourScraper];
     private readonly DateTimeOffset _serviceCreatedOn = DateTimeOffset.Now;
     
     public async Task Discover(string search)
