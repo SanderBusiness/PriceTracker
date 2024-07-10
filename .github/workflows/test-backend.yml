@@ -27,6 +27,6 @@ jobs:
       - name: Test
         run: cd ./Backend/Test && dotnet test --verbosity normal --no-restore --no-build
       - name: Restore API dependencies
-        run: cd ./Server/API && dotnet restore
+        run: cd ./Backend/API && dotnet restore
       - name: Build API
         run: cd ./Backend/API && dotnet build --no-restore
