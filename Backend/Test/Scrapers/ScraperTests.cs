@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Scrapers.Abstract;
 using Scrapers.Carrefour;
+using Scrapers.Delhaize;
 
 namespace Test.Scrapers;
 
@@ -8,7 +9,7 @@ namespace Test.Scrapers;
 public class ScraperTests
 {
     [TestCase(typeof(CarrefourScraper))]
-    //[TestCase(typeof(DelhaizeScraper))]
+    [TestCase(typeof(DelhaizeScraper))]
     public async Task SomeResults(Type scraperType)
     {
         var scraper = Activator.CreateInstance(scraperType) as IDiscoveryScraper;
@@ -17,7 +18,7 @@ public class ScraperTests
     }
     
     [TestCase(typeof(CarrefourScraper))]
-    //[TestCase(typeof(DelhaizeScraper))]
+    [TestCase(typeof(DelhaizeScraper))]
     public async Task NoResults(Type scraperType)
     {
         var scraper = Activator.CreateInstance(scraperType) as IDiscoveryScraper;
