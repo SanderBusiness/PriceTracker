@@ -10,7 +10,9 @@ public static class Cors
             conf =>
             {
                 conf.WithOrigins(
-                        "http://localhost:3000"
+                        "http://localhost:3000",
+                        "https://witty-ground-01d224b1e.5.azurestaticapps.net",
+                        "https://pricetracker.sanderc.net"
                     )
                     .WithMethods("GET", "PUT", "DELETE", "POST", "get", "put", "delete", "post")
                     .AllowAnyHeader();
