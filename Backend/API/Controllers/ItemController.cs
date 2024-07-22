@@ -11,4 +11,10 @@ public class ItemController(IItemService itemService) : ControllerBase
     {
         return Ok(await itemService.GetFromSearch(s));
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> Get([FromQuery] Guid id)
+    {
+        return Ok(await itemService.Get(id));
+    }
 }

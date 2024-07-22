@@ -12,6 +12,7 @@ public class ApplicationContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseInMemoryDatabase(nameof(ApplicationContext));
+        optionsBuilder.UseProjectables();
         base.OnConfiguring(optionsBuilder);
     }
 }

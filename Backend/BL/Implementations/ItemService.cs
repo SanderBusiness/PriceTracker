@@ -10,11 +10,24 @@ public class ItemService(IScraperService scraperService, ApplicationContext db, 
 {
     public async Task<List<Item>> GetFromSearch(string searchQuery)
     {
-        var count = await GetItemSearchQuery(searchQuery).CountAsync();
+        var count = await GetItemSearchQuery(searchQuery)
+            .Where(item => item.PriceHistory.All(history => history.CreatedOn < DateTimeOffset.Now.AddDays(-1)))
+            .CountAsync();
         logger.LogInformation("Found {Count} items for search: {Query}", count, searchQuery);
         if (count == 0)
             await scraperService.Discover(searchQuery);
-        return await GetItemSearchQuery(searchQuery).ToListAsync();
+        return await GetItemSearchQuery(searchQuery)
+            .ToListAsync();
+    }
+
+    public Task<Item> Get(Guid id)
+    {
+        return db.Items
+            .Include(e => e.PriceHistory)
+            .Include(e => e.SearchQueries)
+            .Where(e => e.Id == id)
+            .AsNoTracking()
+            .SingleAsync();
     }
 
     private IQueryable<Item> GetItemSearchQuery(string searchQuery)
@@ -24,6 +37,7 @@ public class ItemService(IScraperService scraperService, ApplicationContext db, 
             .Include(e => e.PriceHistory)
             .Where(e => e.SearchQueries
                 .Any(q => q.Search.ToLower().Contains(query)
-                || q.Item.Title.ToLower().Contains(query)));
+                || q.Item.Title.ToLower().Contains(query)))
+            .AsNoTracking();
     }
 }
