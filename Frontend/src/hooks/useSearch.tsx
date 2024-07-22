@@ -4,6 +4,7 @@ import {TextField} from "@mui/material";
 import {useDebounce} from "use-debounce";
 import axios from "axios";
 import loadCancelToken from "../functions/loadCancelToken";
+import {useSnackbar} from "notistack";
 
 interface SearchContextProps {
     setQuery: (query: string) => void,
@@ -14,19 +15,22 @@ interface SearchContextProps {
 
 const SearchContext = createContext<SearchContextProps>({
     query: '',
-    setQuery: () => {},
+    setQuery: () => {
+    },
     loading: false,
     products: []
 })
 
 let source = loadCancelToken()
 const cancelMsg = "Filter value has changed"
-export function SearchProvider({ children }: { children: React.ReactNode }) {
+
+export function SearchProvider({children}: { children: React.ReactNode }) {
     const [filter, setFilter] = useState("");
     const [typing, setTyping] = useState(false)
     const [value] = useDebounce(filter, 500);
     const [loading, setLoading] = useState(false);
     const [products, setProducts] = useState<Product[]>([])
+    const {enqueueSnackbar} = useSnackbar()
 
     useEffect(() => {
         setTyping(false)
@@ -41,11 +45,10 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
         if (!typing) setTyping(true)
         setFilter(value)
     }
+
     useEffect(() => {
         try {
-            console.log("ran")
             if (isValidFilter(value)) {
-                console.log("go go")
                 setLoading(true)
                 setProducts([])
                 axios
@@ -55,7 +58,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
                         setLoading(false)
                     })
                     .catch(err => {
-                        if (`${err.name}` !== "CanceledError") console.log(err.message, {variant: "error"})
+                        if (`${err.name}` !== "CanceledError") enqueueSnackbar(err.message, {variant: "error"})
                     })
             } else {
                 setProducts([])
@@ -63,13 +66,14 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
                     console.log("Je moet minstens 3 karakters invullen voordat we beginnen te zoeken!", {variant: "info"})
             }
         } catch (e: any) {
-            console.log("Error: ", e)
+            enqueueSnackbar("Error: " + e, {variant: "error"})
             setLoading(false)
         }
     }, [value])
 
-    return <SearchContext.Provider value={{query: value, setQuery:setQuery, loading, products}}>
-        <TextField sx={{width: "100%"}} type="text" placeholder="Zoek product..." onChange={e => setQuery(e.target.value)} />
+    return <SearchContext.Provider value={{query: value, setQuery: setQuery, loading, products}}>
+        <TextField autoComplete={"off"} sx={{width: "100%", mt: 2}} type="text" placeholder="Zoek product..."
+                   onChange={e => setQuery(e.target.value)}/>
         {children}
     </SearchContext.Provider>
 }
@@ -78,6 +82,6 @@ export default function useSearch() {
     return useContext(SearchContext);
 }
 
-function isValidFilter(value:string) {
+function isValidFilter(value: string) {
     return value.length > 3
 }

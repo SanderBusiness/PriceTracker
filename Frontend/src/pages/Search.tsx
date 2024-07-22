@@ -1,17 +1,14 @@
-import useSearch from "../hooks/useSearch";
-import {ImageList, LinearProgress, Typography} from "@mui/material";
-import ProductCard from "../components/ProductCard";
+import {SearchResults} from "../components/search/SearchResults";
+import SelectedResult from "../components/search/SelectedResult";
+import {Link} from "react-router-dom";
+import useSearch, {SearchProvider} from "../hooks/useSearch";
 
 export default function Search() {
-    const {products, loading, query} = useSearch()
+    const {query} = useSearch()
 
-    return <>
-        {loading && <LinearProgress/>}
-        {query.length > 0 && !loading && <Typography variant={"subtitle2"} sx={{mb: 3}}>
-            We hebben {products.length} resultaten gevonden voor: {query}
-        </Typography>}
-        <ImageList variant="masonry" cols={5} gap={8}>
-            {products.map(product => <ProductCard product={product} key={product.id}/>)}
-        </ImageList>
-    </>
+    return <SearchProvider>
+        <SelectedResult/>
+        <SearchResults/>
+        {query.length > 0 && <Link to={"/Api"}>Api</Link>}
+    </SearchProvider>
 }

@@ -17,6 +17,16 @@ public class ItemService(IScraperService scraperService, ApplicationContext db, 
         return await GetItemSearchQuery(searchQuery).ToListAsync();
     }
 
+    public Task<Item> Get(Guid id)
+    {
+        return db.Items
+            .Include(e => e.PriceHistory)
+            .Include(e => e.SearchQueries)
+            .Where(e => e.Id == id)
+            .AsNoTracking()
+            .SingleAsync();
+    }
+
     private IQueryable<Item> GetItemSearchQuery(string searchQuery)
     {
         var query = searchQuery.ToLower();
@@ -24,6 +34,7 @@ public class ItemService(IScraperService scraperService, ApplicationContext db, 
             .Include(e => e.PriceHistory)
             .Where(e => e.SearchQueries
                 .Any(q => q.Search.ToLower().Contains(query)
-                || q.Item.Title.ToLower().Contains(query)));
+                || q.Item.Title.ToLower().Contains(query)))
+            .AsNoTracking();
     }
 }
