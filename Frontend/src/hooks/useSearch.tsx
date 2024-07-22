@@ -69,7 +69,7 @@ export function SearchProvider({children}: { children: React.ReactNode }) {
             enqueueSnackbar("Error: " + e, {variant: "error"})
             setLoading(false)
         }
-    }, [value])
+    }, [value, enqueueSnackbar])
 
     return <SearchContext.Provider value={{query: value, setQuery: setQuery, loading, products}}>
         <TextField
