@@ -40,7 +40,7 @@ export default function SelectedResult() {
         <Typography variant={"h4"}><b>€ {product.latestPrice}</b> {SuperMarket[product.shop]} {product.title}
         </Typography>
         <img style={{maxWidth: "100%"}} src={product.image} alt={product.title}/>
-        <SparkLineChart
+        {orderedPrices.length >= 3 && <SparkLineChart
             plotType="bar"
             data={orderedPrices.map(e => e.price)}
             height={100}
@@ -49,6 +49,6 @@ export default function SelectedResult() {
             xAxis={{
                 data: orderedPrices.map(e => `€ ${e.price} | ${e.createdOn}`),
             }}
-        />
+        />}
     </Box>
 }
