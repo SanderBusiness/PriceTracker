@@ -28,7 +28,8 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "use-debounce": "^10.0.1"
+    "use-debounce": "^10.0.1",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   },
   "scripts": {
     "start": "react-scripts start",
