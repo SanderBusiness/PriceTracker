@@ -24,7 +24,7 @@ export default function SelectedResult() {
                 .finally(() => setLoading(false))
         } else setProduct(null)
         setLoading(false)
-    }, [id])
+    }, [id, enqueueSnackbar])
 
     if (loading)
         return <Skeleton sx={{width: '100%', height: '500px'}}/>
