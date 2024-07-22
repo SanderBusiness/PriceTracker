@@ -1,11 +1,10 @@
 import useSearch from "../../hooks/useSearch";
-import {ImageList, LinearProgress, Typography} from "@mui/material";
+import {ImageList, Typography} from "@mui/material";
 import ProductCard from "../ProductCard";
 
 export function SearchResults() {
     const {products, loading, query} = useSearch()
     return <>
-        {loading && <LinearProgress/>}
         {query.length > 0 && !loading && <Typography variant={"subtitle2"} sx={{mb: 3}}>
             We hebben {products.length} resultaten gevonden voor: {query}
         </Typography>}

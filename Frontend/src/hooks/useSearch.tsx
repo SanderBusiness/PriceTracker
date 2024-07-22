@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from "react";
 import {Product} from "../types/Product";
-import {TextField} from "@mui/material";
+import {LinearProgress, TextField} from "@mui/material";
 import {useDebounce} from "use-debounce";
 import axios from "axios";
 import loadCancelToken from "../functions/loadCancelToken";
@@ -72,8 +72,11 @@ export function SearchProvider({children}: { children: React.ReactNode }) {
     }, [value])
 
     return <SearchContext.Provider value={{query: value, setQuery: setQuery, loading, products}}>
-        <TextField autoComplete={"off"} sx={{width: "100%", mt: 2}} type="text" placeholder="Zoek product..."
-                   onChange={e => setQuery(e.target.value)}/>
+        <TextField
+            autoComplete={"off"} sx={{width: "100%", mt: 2}} type="text"
+            placeholder="Zoek product..."
+            onChange={e => setQuery(e.target.value)}/>
+        {loading && <LinearProgress/>}
         {children}
     </SearchContext.Provider>
 }
