@@ -1,6 +1,7 @@
 ﻿using BL.Implementations;
 using BL.Interfaces;
 using DAL.EF;
+using Scrapers.Abstract;
 using Scrapers.Carrefour;
 
 namespace API.Helpers.Program;
@@ -13,6 +14,6 @@ public static class Dependencies
             .AddDbContext<ApplicationContext>()
             .AddScoped<IItemService, ItemService>()
             .AddTransient<IScraperService, ScraperService>()
-            .AddSingleton<CarrefourScraper>();
+            .AddSingleton<IDiscoveryScraper, CarrefourScraper>();
     }
 }
