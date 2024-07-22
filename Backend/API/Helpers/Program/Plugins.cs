@@ -12,6 +12,7 @@ public static class Plugins
         });
         builder.Services.AddSwaggerGen();
         builder.Services
+            .AddCors()
             .AddDependencies();
         return builder;
     }
@@ -34,6 +35,7 @@ public static class Plugins
         app.UseRouting();
         app.UseAuthorization();
         app.MapControllers();
+        app.UseCors(Cors.Name);
         return app;
     }
 }
